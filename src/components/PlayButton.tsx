@@ -6,15 +6,15 @@ import { MEDIA_TYPE } from "src/types/Common";
 
 interface PlayButtonProps extends ButtonProps {
   mediaType?: MEDIA_TYPE;
-  id?: number;
+  movieId?: number;
 }
 
-export default function PlayButton({ sx, mediaType = MEDIA_TYPE.Movie, id, ...others }: PlayButtonProps) {
+export default function PlayButton({ sx, mediaType = MEDIA_TYPE.Movie, movieId, ...others }: PlayButtonProps) {
   const navigate = useNavigate();
   
   const handleClick = () => {
-    if (id && mediaType) {
-      navigate(`/${MAIN_PATH.watch}/${mediaType}/${id}`);
+    if (movieId && mediaType) {
+      navigate(`/${MAIN_PATH.watch}/${mediaType}/${movieId}`);
     } else {
       navigate(`/${MAIN_PATH.watch}`);
     }
