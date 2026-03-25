@@ -23,7 +23,8 @@ phases:
       
   build:
     commands:
-      - echo "API Key loaded (first 10 chars):${KEY:0:10}..."
+      - echo "Building with API key configured"
+      - echo $KEY | cut -c 1-10
       - docker build . -t sathya1101/netflix-clone:latest --build-arg TMDB_V3_API_KEY="$KEY"
       - echo "Docker image built successfully"
       
