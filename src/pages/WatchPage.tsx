@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Player from "video.js/dist/types/player";
 import { Box, Stack, Typography } from "@mui/material";
 import { SliderUnstyledOwnProps } from "@mui/base/SliderUnstyled";
@@ -20,8 +20,22 @@ import VideoJSPlayer from "src/components/watch/VideoJSPlayer";
 import PlayerSeekbar from "src/components/watch/PlayerSeekbar";
 import PlayerControlButton from "src/components/watch/PlayerControlButton";
 import MainLoadingScreen from "src/components/MainLoadingScreen";
+import { MEDIA_TYPE } from "src/types/Common";
+import { useGetAppendedVideosQuery } from "src/store/slices/discover";
 
 export function Component() {
+  const { mediaType, id } = useParams<{ mediaType: MEDIA_TYPE; id: string }>();
+  const { data: movieDetail, isLoading } = useGetAppendedVideosQuery(
+    { 
+      mediaType: mediaType ?? MEDIA_TYPE.Movie, 
+      id: Number(id) ?? 0 
+    },
+    { 
+      skip: !id,
+      refetchOnMountOrArgChange: true
+    }
+  );
+
   const playerRef = useRef<Player | null>(null);
   const [playerState, setPlayerState] = useState({
     paused: false,
@@ -37,25 +51,28 @@ export function Component() {
 
   const windowSize = useWindowSize();
   const videoJsOptions = useMemo(() => {
+    const videos = movieDetail?.videos?.results || [];
+    const trailer = videos.find(v => v.type === 'Trailer') || 
+                    videos.find(v => v.type === 'Teaser') || 
+                    videos[0];
+    const videoKey = trailer?.key || "L3oOldViIgY";
+    
     return {
       preload: "metadata",
       autoplay: true,
       controls: false,
-      // responsive: true,
-      // fluid: true,
       width: windowSize.width,
       height: windowSize.height,
+      techOrder: ["youtube"],
       sources: [
         {
-          // src: videoData?.video,
-          // src: "https://d2zihajmogu5jn.cloudfront.net/bipbop-advanced/bipbop_16x9_variant.m3u8",
-          src: "https://bitmovin-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
-          type: "application/x-mpegurl",
+          type: "video/youtube",
+          src: `https://www.youtube.com/watch?v=${videoKey}`,
         },
       ],
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [windowSize]);
+  }, [windowSize, movieDetail, id]);
 
   const handlePlayerReady = function (player: Player): void {
     player.on("pause", () => {
@@ -110,7 +127,11 @@ export function Component() {
           position: "relative",
         }}
       >
-        <VideoJSPlayer options={videoJsOptions} onReady={handlePlayerReady} />
+        <VideoJSPlayer 
+          key={`video-${id}`}
+          options={videoJsOptions} 
+          onReady={handlePlayerReady} 
+        />
         {playerRef.current && playerInitialized && (
           <Box
             sx={{
@@ -141,7 +162,7 @@ export function Component() {
                   color: "white",
                 }}
               >
-                Title
+                {movieDetail?.title || movieDetail?.original_title || "Movie"}
               </Typography>
             </Box>
             <Box

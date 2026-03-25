@@ -64,9 +64,18 @@ export default function VideoJSPlayer({
         // on prop change, for example:
       } else {
         const player = playerRef.current;
-        // player.autoplay(options.autoplay);
         player.width(options.width);
         player.height(options.height);
+        
+        // Update video source if it changed
+        if (options.sources && options.sources.length > 0) {
+          player.src(options.sources);
+          if (options.autoplay) {
+            player.ready(() => {
+              player.play();
+            });
+          }
+        }
       }
     })();
   }, [options, videoRef]);
