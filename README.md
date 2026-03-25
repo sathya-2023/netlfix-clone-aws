@@ -182,9 +182,9 @@ git clone <SSH URL>
 
 * Just for Test
 
-* `Pull` this Docker Image is locally using `docker run -n netflix -p 8080:80 dhruvdarji123/netflix-react-app`
+* `Pull` this Docker Image is locally using `docker run -p 3000:80 --name netflix-test sathya1101/netflix-clone:v2`
 
-![](https://miro.medium.com/v2/resize:fit:802/1*84WPkjw5a1ddu8QS7Brx7g.png)
+![](images/docker-test.png)
 
 # **Build Artifact store in S3 Bucket**
 
