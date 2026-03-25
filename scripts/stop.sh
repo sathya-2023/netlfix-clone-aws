@@ -1,5 +1,5 @@
 #!/bin/bash
 
-docker stop netflix
-docker rm netflix
-docker image rm dhruvdarji123/netflix-react-app:latest 
+docker stop netflix || true
+docker rm netflix || true
+docker image rm sathya1101/netflix-clone:latest || true 
