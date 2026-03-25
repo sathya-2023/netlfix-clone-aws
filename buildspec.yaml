@@ -4,6 +4,7 @@ env:
   parameter-store:
     USERNAME: /dockerhub/username
     PASSWORD: /dockerhub/password
+    KEY: /dockerhub/api-key
 
 phases:
   install:
@@ -20,7 +21,7 @@ phases:
       
   build:
     commands:
-      - docker build . -t sathya1101/netflix-clone:latest
+      - docker build . -t sathya1101/netflix-clone:latest --build-arg TMDB_V3_API_KEY=$KEY
       - echo "Docker image built successfully"
       
   post_build:
