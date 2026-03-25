@@ -31,7 +31,7 @@ export default function MainLayout() {
           <VideoPortalContainer />
         </PortalProvider>
       </DetailModalProvider>
-      {location.pathname !== `/${MAIN_PATH.watch}` && <Footer />}
+      {!location.pathname.startsWith(`/${MAIN_PATH.watch}`) && <Footer />}
     </Box>
   );
 }
