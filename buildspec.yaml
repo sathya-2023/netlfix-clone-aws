@@ -18,16 +18,17 @@ phases:
     commands:
       - npm install
       - echo "Dependencies installed"
+      - echo "Logging into DockerHub"
+      - docker login -u $USERNAME -p $PASSWORD
       
   build:
     commands:
-      - docker build . -t sathya1101/netflix-clone:latest --build-arg TMDB_V3_API_KEY=$KEY
+      - echo "API Key loaded (first 10 chars):${KEY:0:10}..."
+      - docker build . -t sathya1101/netflix-clone:latest --build-arg TMDB_V3_API_KEY="$KEY"
       - echo "Docker image built successfully"
       
   post_build:
     commands:
-      - echo "Logging into DockerHub"
-      - docker login -u $USERNAME -p $PASSWORD
       - docker push sathya1101/netflix-clone:latest
       - echo "Image pushed to DockerHub"
 
